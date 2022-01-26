@@ -33,9 +33,17 @@ public class IKArm : IKBase
 	public Transform        Endpoint;
 	[Tooltip("Object, which Arm always tries to reach")]
 	public Transform        Target;
-	
-	
-	
+
+	[Space(10)]
+	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
+	public bool Limits = false;
+	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
+	public float Minimum = 0;
+	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
+	public float Maximum = 0;
+
+
+
 	[HideInInspector]   public bool     DrawVisual=true;
 	[HideInInspector]	public float    VisualSize=0.25f;
 	[HideInInspector]	public bool     VisualBaseMarker=true;
@@ -118,7 +126,12 @@ public class IKArm : IKBase
 			if (!SolveIK(ref TargetOriginAngle,ref TargetElbowAngle,ref IsDistanceLimit))
 				return;
 		}
+
+		// Applying limiter stage if active
+		if (Limits)
+			LimitAngle(ref TargetElbowAngle, Minimum, Maximum);
 		
+
 		// Animation stage, current version of animator support only instant mode
 		Animate(IsDistanceLimit);
 		
@@ -313,5 +326,52 @@ public class IKArm : IKBase
 			v2=v1+Origin.forward*VisualSize;
 			Debug.DrawLine(v1,v2,VisualStartOrientationColor);
 		}
+	}
+
+	// Limiting stage implementation. Will limit an Angle, then return true, if
+	// limit is occured, and false otherwise
+	bool LimitAngle(ref float Angle, float Minimum, float Maximum)
+	{
+		float MinAngle;
+		float MaxAngle;
+		float NewMaxAngle;
+		float NewAngle;
+
+		MinAngle = Minimum;
+		MaxAngle = Maximum;
+
+		// Limiting Angle is a tricky business. At first,
+		// lets wrap everything into acceptable range
+		if (MinAngle >= 360.0f) MinAngle -= 360.0f;
+		if (MinAngle <= -360.0f) MinAngle += 360.0f;
+		if (MaxAngle >= 360.0f) MaxAngle -= 360.0f;
+		if (MaxAngle <= -360.0f) MaxAngle += 360.0f;
+
+		// Turning everything by minus minimal angle to move into alternative
+		// "coordinate system"
+		NewMaxAngle = MaxAngle - MinAngle;
+		NewAngle = Angle - MinAngle;
+
+		// Flipping maximum and angle if they become negative
+		if (NewMaxAngle < 0.0f) NewMaxAngle += 360;
+		if (NewAngle < 0.0f) NewAngle += 360;
+
+		// Now, if Angle has gone beyond then it is always greater that maximum
+		if (NewAngle > NewMaxAngle)
+		{
+			// Now we need to check which distance closer: 360 or a maximum value
+			// a 360 choise teleports us into 0
+			if (NewAngle - NewMaxAngle < 360 - NewAngle)
+				Angle = MaxAngle;
+			else
+				Angle = MinAngle;
+
+			// Target angle is not reachable as its gone past limiter, so
+			// we returning true
+			return true;
+		}
+
+		// Target angle wasnt limited, so we returning false
+		return false;
 	}
 }
