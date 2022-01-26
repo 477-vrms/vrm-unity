@@ -29,8 +29,6 @@ public class Connection : MonoBehaviour
         public float Joint7;
         public float Joint8;
     }
-    private float nextActionTime = 0.0f;
-    public float period = 0.1f;
 
     // Start is called before the first frame update
     async void Start()
@@ -71,24 +69,18 @@ public class Connection : MonoBehaviour
         }
         else
         {
-            Debug.Log("It is Closed" + websocket.State);
+            Debug.Log("Connection: " + websocket.State);
         }
 
     }
 
     async void Update()
     {
-        
-        if (Time.time > nextActionTime)
-        {
-            nextActionTime += period;
-            Debug.Log("Update Call");
             #if !UNITY_WEBGL || UNITY_EDITOR
             websocket.DispatchMessageQueue();
             #endif
             if (websocket.State == WebSocketState.Open)
             {
-                Debug.Log("It is Open");
                 MyClass myObject = new MyClass();
                 myObject.Joint1 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint1.transform)).y;
                 myObject.Joint2 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint2.transform)).x;
@@ -105,9 +97,9 @@ public class Connection : MonoBehaviour
             }
             else
             {
-                Debug.Log("It is close");
+                Debug.Log("Connection closed.");
             }
-        }
+        
     }
 
     private async void OnApplicationQuit()

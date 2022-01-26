@@ -23,12 +23,11 @@ public class TriggerGrip : MonoBehaviour
 
         foreach (var device in inputDevices)
         {
-            //gameObject.GetComponent<TextMesh>().text += (string.Format("\nDevice found with name '{0}' and role '{1}'", device.name, device.role.ToString()));
-            if (device.role.ToString() == "LeftHanded")
+            if (device.characteristics.ToString().Contains("Controller, Left"))
             {
                 device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatL);
             }
-            if (device.role.ToString() == "RightHanded")
+            if (device.characteristics.ToString().Contains("Controller, Right"))
             {
                 device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatR);
             }
@@ -40,7 +39,8 @@ public class TriggerGrip : MonoBehaviour
         }
         else
         {
-            GripPercent = (Mathf.Round(triggerFloat * 100f) / 100f) * 100;
+            //GripPercent = (Mathf.Round(triggerFloat * 100f) / 100f) * 100;
+            GripPercent = (float)System.Math.Round(triggerFloat*100, 1);
         }
         
 
