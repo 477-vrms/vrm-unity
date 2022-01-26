@@ -17,6 +17,7 @@ public class Connection : MonoBehaviour
     public Transform Joint5;
     public Transform Joint6;
     public Transform Joint7;
+    public TriggerGrip Gripper; //gets grip % from a custom script (Grip Percent game object)
     public class MyClass
     {
         public float Joint1;
@@ -96,38 +97,7 @@ public class Connection : MonoBehaviour
                 myObject.Joint5 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint5.transform)).x;
                 myObject.Joint6 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint6.transform)).x;
                 myObject.Joint7 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint7.transform)).z;
-                
-
-                //GRIPPER SECTION
-                var inputDevices = new List<UnityEngine.XR.InputDevice>();
-                UnityEngine.XR.InputDevices.GetDevices(inputDevices);
-                float triggerFloatL = 0;
-                float triggerFloatR = 0;
-                float triggerFloat = 0;
-
-                foreach (var device in inputDevices)
-                {
-                    //gameObject.GetComponent<TextMesh>().text += (string.Format("\nDevice found with name '{0}' and role '{1}'", device.name, device.role.ToString()));
-                    if (device.role.ToString() == "LeftHanded")
-                    {
-                        device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatL);
-                    }
-                    if (device.role.ToString() == "RightHanded")
-                    {
-                        device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatR);
-                    }
-                }
-                triggerFloat = Mathf.Max(triggerFloatL, triggerFloatR);
-                if (triggerFloat < 0.01)
-                {
-                    //gameObject.GetComponent<TextMesh>().text += "\nClaw: 0%";
-                    myObject.Joint8 = 0;
-                }
-                else
-                {
-                    myObject.Joint8 =  (Mathf.Round(triggerFloat * 100f) / 100f) * 100;
-                }
-                //END GRIPPER SECTION
+                myObject.Joint8 = Gripper.getGrip();
 
                 //string json = ;
                 await websocket.SendText(JsonUtility.ToJson(myObject));
