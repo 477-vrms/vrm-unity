@@ -19,7 +19,6 @@ public class Claw : MonoBehaviour
     {
 
         float amountToRotate = Gripper.getGrip() * (MaxRotation / 100);
-        Debug.Log(amountToRotate);
         Vector3 newRotation = new Vector3(0, amountToRotate, 0);
         finger1.transform.localEulerAngles = newRotation;
         finger2.transform.localEulerAngles = newRotation;

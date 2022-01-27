@@ -11,7 +11,7 @@ public class TriggerGrip : MonoBehaviour
 {
     [ReadOnly]
     public float GripPercent;
-
+    public float maxGrip = 100;
 
     void Update()
     {
@@ -20,6 +20,7 @@ public class TriggerGrip : MonoBehaviour
         float triggerFloatL = 0;
         float triggerFloatR = 0;
         float triggerFloat = 0;
+        
 
         foreach (var device in inputDevices)
         {
@@ -48,7 +49,22 @@ public class TriggerGrip : MonoBehaviour
 
     public float getGrip()
     {
+        return Mathf.Min(GripPercent, maxGrip);
+    }
+    public float getMaxGrip()
+    {
         return GripPercent;
+    }
+
+
+    public void lockGrip()
+    {
+        maxGrip = getGrip();
+    }
+
+    public void resetGrip()
+    {
+        maxGrip = 100;
     }
 }
 
