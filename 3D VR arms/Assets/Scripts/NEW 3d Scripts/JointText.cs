@@ -8,58 +8,85 @@ using TMPro;
 public class JointText : MonoBehaviour
 {
     public Transform Joint1;
-    public float Joint1Offset;
     public Transform Joint2;
-    public float Joint2Offset;
     public Transform Joint3;
-    public float Joint3Offset;
     public Transform Joint4;
-    public float Joint4Offset;
     public Transform Joint5;
-    public float Joint5Offset;
     public Transform Joint6;
-    public float Joint6Offset;
     public Transform Joint7;
-    public float Joint7Offset;
-    public TriggerGrip Gripper; //gets grip % from a custom script (Grip Percent game object)
+    public TriggerGrip Gripper;
     public TextMeshPro textDisplay;
 
 
-    void Update() //SPAGHETTI CODE, should fix these offsets things
+    void Update() //SPAGHETTI CODE
     {
+        //Way to get inspector rotation (doesnt work on builds)
+        //UnityEditor.TransformUtils.GetInspectorRotation(Joint1.transform)
 
-        textDisplay.text = "Joint 1, Y: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint1.transform)).y.ToString("F2");
-        textDisplay.text += "\nJoint 1, Y: " + (Clamp0360(Joint1.transform.localEulerAngles.y)+ Joint1Offset).ToString("F2");
-        textDisplay.text += "\nJoint 2, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint2.transform)).x.ToString("F2");
-        textDisplay.text += "\nJoint 2, Y: " + (Clamp0360(Joint2.transform.localEulerAngles.x) + Joint2Offset).ToString("F2");
-        textDisplay.text += "\nJoint 3, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint3.transform)).x.ToString("F2");
-        textDisplay.text += "\nJoint 3, Y: " + (Clamp0360(Joint3.transform.localEulerAngles.x) + Joint3Offset).ToString("F2");
-        textDisplay.text += "\nJoint 4, Y: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint4.transform)).y.ToString("F2");
-        textDisplay.text += "\nJoint 4, Y: " + (Clamp0360(Joint4.transform.localEulerAngles.y) + Joint4Offset).ToString("F2");
-        textDisplay.text += "\nJoint 5, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint5.transform)).x.ToString("F2");
-        textDisplay.text += "\nJoint 5, Y: " + (Clamp0360(Joint5.transform.localEulerAngles.x) + Joint5Offset).ToString("F2");
-        textDisplay.text += "\nJoint 6, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint6.transform)).x.ToString("F2");
-        textDisplay.text += "\nJoint 6, Y: " + (Clamp0360(Joint6.transform.localEulerAngles.x) + Joint6Offset).ToString("F2");
-        textDisplay.text += "\nJoint 7, Z: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint7.transform)).z.ToString("F2");
-        textDisplay.text += "\nJoint 7, Y: " + (Clamp0360(Joint7.transform.localEulerAngles.z) + Joint7Offset).ToString("F2");
+        textDisplay.text = "JOINT 1, Y: " + Account(Joint1.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJOINT 2, X: " + Account(Joint2.transform.localEulerAngles, "x").ToString("F2");
+        textDisplay.text += "\nJOINT 3, X: " + Account(Joint3.transform.localEulerAngles, "x").ToString("F2");
+        textDisplay.text += "\nJOINT 4, Y: " + Account(Joint4.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJOINT 5, Y: " + Account(Joint5.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJOINT 6, Y: " + Account(Joint6.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJOINT 7, Z: " + Account(Joint7.transform.localEulerAngles, "z").ToString("F2");
         textDisplay.text += "\nJoint 8, C: " + Gripper.getGrip() + "%";
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "Joint 1, Y: "+ (UnityEditor.TransformUtils.GetInspectorRotation(Joint1.transform)).y.ToString();
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text += "\nJoint 2, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint2.transform)).x.ToString();
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text += "\nJoint 3, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint3.transform)).x.ToString();
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text += "\nJoint 4, Y: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint4.transform)).y.ToString();
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text += "\nJoint 5, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint5.transform)).x.ToString();
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text += "\nJoint 6, X: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint6.transform)).x.ToString();
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text += "\nJoint 7, Z: " + (UnityEditor.TransformUtils.GetInspectorRotation(Joint7.transform)).z.ToString();
-        //gameObject.GetComponent<TMPro.TextMeshProUGUI>().text += "\nJoint 8, C: " + Gripper.getGrip() + "%";
     }
-    public static float Clamp0360(float eulerAngles)
+
+    public float Account(Vector3 angle, string axis)
     {
-        float result = eulerAngles - Mathf.CeilToInt(eulerAngles / 360f) * 360f;
-        if (result < 0)
+        float newAngle = 0;
+
+        if (axis == "x")
         {
-            result += 360f;
+            newAngle = angle.x;
+            if (angle.y == 180 && angle.z == 180)
+            {
+                newAngle = (360 - angle.x + 180) % 360;
+            }
+            else if (angle.y == 0 && angle.z == 0)
+            {
+                if (angle.x > 180)
+                {
+                    newAngle = angle.x - 360;
+                }
+            }
+                
         }
-        return result;
+        else if (axis == "y")
+        {
+            newAngle = angle.y;
+            if (angle.x == 180 && angle.z == 180)
+            {
+                newAngle = (360 - angle.y + 180) % 360;
+            }
+            else if (angle.x == 0 && angle.z == 0)
+            {
+                if (angle.y > 180)
+                {
+                    newAngle = angle.y - 360;
+                }
+            }
+
+        }
+        else if (axis == "z")
+        {
+            newAngle = angle.z;
+            if (angle.x == 180 && angle.y == 180)
+            {
+                newAngle = (360 - angle.z + 180) % 360;
+            }
+            else if (angle.x == 0 && angle.y == 0)
+            {
+                if (angle.z > 180)
+                {
+                    newAngle = angle.z - 360;
+                }
+            }
+
+        }
+
+        return newAngle;
     }
 }
 

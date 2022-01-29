@@ -18,7 +18,7 @@ public class AllowClawToGrab2 : MonoBehaviour
     Vector3 m_DetachVelocity;
     Vector3 m_DetachAngularVelocity;
 
-    int fingersTouching = 0;
+    //int fingersTouching = 0;
 
     private List<string> listofnames = new List<string>();
 
@@ -33,23 +33,33 @@ public class AllowClawToGrab2 : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        
         //Debug.Log(fingersTouching.ToString());
         if (listofnames.Count > 1 && Gripper.getGrip() != 0 && Gripper.getGrip() != 100 && state == "not grabbed")
         {
-            state = "grabbed";
-            Gripper.lockGrip();
-            gameObject.transform.parent = ClawBase.transform;
-            rb.isKinematic = true;
+            if (claw.isGrabbed == false)
+            {
+                //Debug.Log(state);
+                //Debug.Log("GRABBED");
+                state = "grabbed";
+                Gripper.lockGrip();
+                gameObject.transform.parent = ClawBase.transform;
+                rb.isKinematic = true;
+                claw.isGrabbed = true;
+            }
+            
 
         }
-        if (state == "grabbed" && Gripper.maxGrip > Gripper.getMaxGrip()) //DROPPED
+        else if (state == "grabbed" && Gripper.maxGrip > Gripper.getMaxGrip()) //DROPPED
         {
-            fingersTouching = 0;
+            //fingersTouching = 0;
+            //Debug.Log("DROPPED");
             Gripper.resetGrip();
             rb.isKinematic = false;
             state = "not grabbed";
             gameObject.transform.parent = oldParent.transform;
             rb.velocity = velocity;
+            claw.isGrabbed = false;
 
         }
         else if (state == "grabbed") //held (this part doesnt do angular momentum)
@@ -72,7 +82,7 @@ public class AllowClawToGrab2 : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 6 || collision.gameObject.layer == 3)
+        if (collision.gameObject.layer == 6 || collision.gameObject.layer == 3 || collision.gameObject.layer == 8)
         {
             Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
         }
@@ -81,8 +91,8 @@ public class AllowClawToGrab2 : MonoBehaviour
             if(!listofnames.Contains(collision.gameObject.name))
             {
                 listofnames.Add(collision.gameObject.name);
-                Debug.Log("added");
-                Debug.Log(listofnames.Count);
+                //Debug.Log("added");
+                //Debug.Log(listofnames.Count);
             }
             //if(fingersTouching > 1 && state == "not grabbed")
             //{
@@ -105,8 +115,8 @@ public class AllowClawToGrab2 : MonoBehaviour
                 if (listofnames.Contains(collision.gameObject.name))
                 {
                     listofnames.Remove(collision.gameObject.name);
-                    Debug.Log("removed");
-                    Debug.Log(listofnames.Count);
+                    //Debug.Log("removed");
+                    //Debug.Log(listofnames.Count);
                 }
             //}
         }

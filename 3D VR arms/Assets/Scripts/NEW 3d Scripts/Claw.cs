@@ -13,7 +13,7 @@ public class Claw : MonoBehaviour
     public Transform finger1;
     public Transform finger2;
     public float MaxRotation;
-
+    public bool isGrabbed = false;
 
     void Update()
     {

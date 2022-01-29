@@ -14,10 +14,10 @@ TagManager:
   - UI
   - VR
   - Red Fingers
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - IgnorePlayer
+  - IgnoreAllButPlayer
+  - Ground
   - 
   - 
   - 

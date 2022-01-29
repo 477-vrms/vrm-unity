@@ -82,13 +82,13 @@ public class Connection : MonoBehaviour
             if (websocket.State == WebSocketState.Open)
             {
                 MyClass myObject = new MyClass();
-                myObject.Joint1 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint1.transform)).y;
-                myObject.Joint2 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint2.transform)).x;
-                myObject.Joint3 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint3.transform)).x;
-                myObject.Joint4 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint4.transform)).y;
-                myObject.Joint5 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint5.transform)).x;
-                myObject.Joint6 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint6.transform)).x;
-                myObject.Joint7 = (UnityEditor.TransformUtils.GetInspectorRotation(Joint7.transform)).z;
+                myObject.Joint1 = Account(Joint1.transform.localEulerAngles, "y");
+                myObject.Joint2 = Account(Joint2.transform.localEulerAngles, "x");
+                myObject.Joint3 = Account(Joint3.transform.localEulerAngles, "x");
+                myObject.Joint4 = Account(Joint4.transform.localEulerAngles, "y");
+                myObject.Joint5 = Account(Joint5.transform.localEulerAngles, "y");
+                myObject.Joint6 = Account(Joint6.transform.localEulerAngles, "y");
+                myObject.Joint7 = Account(Joint7.transform.localEulerAngles, "z");
                 myObject.Joint8 = Gripper.getGrip();
 
                 //string json = ;
@@ -105,5 +105,60 @@ public class Connection : MonoBehaviour
     private async void OnApplicationQuit()
     {
         await websocket.Close();
+    }
+    public float Account(Vector3 angle, string axis)
+    {
+        float newAngle = 0;
+
+        if (axis == "x")
+        {
+            newAngle = angle.x;
+            if (angle.y == 180 && angle.z == 180)
+            {
+                newAngle = (360 - angle.x + 180) % 360;
+            }
+            else if (angle.y == 0 && angle.z == 0)
+            {
+                if (angle.x > 180)
+                {
+                    newAngle = angle.x - 360;
+                }
+            }
+
+        }
+        else if (axis == "y")
+        {
+            newAngle = angle.y;
+            if (angle.x == 180 && angle.z == 180)
+            {
+                newAngle = (360 - angle.y + 180) % 360;
+            }
+            else if (angle.x == 0 && angle.z == 0)
+            {
+                if (angle.y > 180)
+                {
+                    newAngle = angle.y - 360;
+                }
+            }
+
+        }
+        else if (axis == "z")
+        {
+            newAngle = angle.z;
+            if (angle.x == 180 && angle.y == 180)
+            {
+                newAngle = (360 - angle.z + 180) % 360;
+            }
+            else if (angle.x == 0 && angle.y == 0)
+            {
+                if (angle.z > 180)
+                {
+                    newAngle = angle.z - 360;
+                }
+            }
+
+        }
+
+        return newAngle;
     }
 }

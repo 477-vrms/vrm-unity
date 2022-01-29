@@ -15,24 +15,21 @@ public class CopyRotation : MonoBehaviour
     void Update()
     {
 
-        //Vector3 newRotation = new Vector3(target.transform.localRotation.eulerAngles.x, target.transform.localRotation.eulerAngles.y, target.transform.localRotation.eulerAngles.z);
-        Vector3 newRotation = UnityEditor.TransformUtils.GetInspectorRotation(target.transform);
+        Vector3 newRotation = new Vector3(0,0,0);// = UnityEditor.TransformUtils.GetInspectorRotation(target.transform);
         if (Axis.x == 1)
         {
-            //newRotation = new Vector3(gameObject.transform.localRotation.eulerAngles.x, 0f, 0f);
-            newRotation = new Vector3(UnityEditor.TransformUtils.GetInspectorRotation(target.transform).x, offsets.y, offsets.z);
-
+            //newRotation = new Vector3(UnityEditor.TransformUtils.GetInspectorRotation(target.transform).x, offsets.y, offsets.z);
+            newRotation = new Vector3(Account(target.transform.localEulerAngles, "x"), 0, 0);
         }
         else if (Axis.y == 1)
         {
-            //newRotation = new Vector3(0f, gameObject.transform.localRotation.eulerAngles.y, 0f);
-            newRotation = new Vector3(UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).x, UnityEditor.TransformUtils.GetInspectorRotation(target.transform).y, UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).z);
-            //Debug.Log("y: " + UnityEditor.TransformUtils.GetInspectorRotation(target.transform).y);
+            //newRotation = new Vector3(UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).x, UnityEditor.TransformUtils.GetInspectorRotation(target.transform).y, UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).z);
+            newRotation = new Vector3(0, Account(target.transform.localEulerAngles, "y"), 0);
         }
         else if (Axis.z == 1)
         {
-            //newRotation = new Vector3(0f, 0f, gameObject.transform.localRotation.eulerAngles.z);
-            newRotation = new Vector3(UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).x, UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).y, UnityEditor.TransformUtils.GetInspectorRotation(target.transform).z);
+            //newRotation = new Vector3(UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).x, UnityEditor.TransformUtils.GetInspectorRotation(gameObject.transform).y, UnityEditor.TransformUtils.GetInspectorRotation(target.transform).z);
+            newRotation = new Vector3(0, 0, Account(target.transform.localEulerAngles, "z"));        
         }
         
         gameObject.transform.localEulerAngles = newRotation;
@@ -40,6 +37,61 @@ public class CopyRotation : MonoBehaviour
 
 
 
+    }
+    public float Account(Vector3 angle, string axis)
+    {
+        float newAngle = 0;
+
+        if (axis == "x")
+        {
+            newAngle = angle.x;
+            if (angle.y == 180 && angle.z == 180)
+            {
+                newAngle = (360 - angle.x + 180) % 360;
+            }
+            else if (angle.y == 0 && angle.z == 0)
+            {
+                if (angle.x > 180)
+                {
+                    newAngle = angle.x - 360;
+                }
+            }
+
+        }
+        else if (axis == "y")
+        {
+            newAngle = angle.y;
+            if (angle.x == 180 && angle.z == 180)
+            {
+                newAngle = (360 - angle.y + 180) % 360;
+            }
+            else if (angle.x == 0 && angle.z == 0)
+            {
+                if (angle.y > 180)
+                {
+                    newAngle = angle.y - 360;
+                }
+            }
+
+        }
+        else if (axis == "z")
+        {
+            newAngle = angle.z;
+            if (angle.x == 180 && angle.y == 180)
+            {
+                newAngle = (360 - angle.z + 180) % 360;
+            }
+            else if (angle.x == 0 && angle.y == 0)
+            {
+                if (angle.z > 180)
+                {
+                    newAngle = angle.z - 360;
+                }
+            }
+
+        }
+
+        return newAngle;
     }
 
 }

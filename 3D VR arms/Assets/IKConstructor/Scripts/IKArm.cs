@@ -36,11 +36,19 @@ public class IKArm : IKBase
 
 	[Space(10)]
 	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
-	public bool Limits = false;
+	public bool LimitsOrigin = false;
 	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
-	public float Minimum = 0;
+	public float MinimumO = 0;
 	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
-	public float Maximum = 0;
+	public float MaximumO = 0;
+
+	[Space(10)]
+	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
+	public bool LimitsElbow = false;
+	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
+	public float MinimumE = 0;
+	[Tooltip("Angle Limiter stage. Minimum angle is always to the right, maximum - to the left")]
+	public float MaximumE = 0;
 
 
 
@@ -128,9 +136,10 @@ public class IKArm : IKBase
 		}
 
 		// Applying limiter stage if active
-		if (Limits)
-			LimitAngle(ref TargetElbowAngle, Minimum, Maximum);
-		
+		if (LimitsOrigin)
+			LimitAngle(ref TargetOriginAngle, MinimumO, MaximumO);
+		if(LimitsElbow)
+			LimitAngle(ref TargetElbowAngle, MinimumE, MaximumE);
 
 		// Animation stage, current version of animator support only instant mode
 		Animate(IsDistanceLimit);
