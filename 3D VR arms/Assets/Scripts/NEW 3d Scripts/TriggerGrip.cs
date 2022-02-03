@@ -17,27 +17,37 @@ public class TriggerGrip : MonoBehaviour
     public float triggerFloatR = 0;
     public float triggerFloat = 0;
     public bool instant;
+    public bool oculus;
 
     void Update()
     {
-        var inputDevices = new List<UnityEngine.XR.InputDevice>();
-        UnityEngine.XR.InputDevices.GetDevices(inputDevices);
+        if(oculus == false)
+        {
+            var inputDevices = new List<UnityEngine.XR.InputDevice>();
+            UnityEngine.XR.InputDevices.GetDevices(inputDevices);
+            foreach (var device in inputDevices)
+            {
+                //if (device.characteristics.ToString().Contains("Controller, Left"))
+                //{
+                //    device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatL);
+                //}
+                if (device.characteristics.ToString().Contains("Controller, Right"))
+                {
+                    device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatR);
+                }
+            }
+        }
+        else
+        {
+            triggerFloatR = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
+        }
+        
         //float triggerFloatL = 0;
         //float triggerFloatR = 0;
         //float triggerFloat = 0;
         
 
-        foreach (var device in inputDevices)
-        {
-            //if (device.characteristics.ToString().Contains("Controller, Left"))
-            //{
-            //    device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatL);
-            //}
-            if (device.characteristics.ToString().Contains("Controller, Right"))
-            {
-                device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatR);
-            }
-        }
+        
         //triggerFloat = Mathf.Max(triggerFloatR, triggerFloatL);
         if(instant == true)
         {
@@ -45,20 +55,24 @@ public class TriggerGrip : MonoBehaviour
         }
         else
         {
-            triggerFloatR = Mathf.Min(triggerFloatR, maxGrip / 100);
+            triggerFloatR = Mathf.Min(triggerFloatR, maxGrip / 100)+(float)0.01;
             if (triggerFloatR < 0.01)
             {
                 triggerFloatR = 0;
+            }
+            if (triggerFloatR > 99.8)
+            {
+                triggerFloatR = 100;
             }
             if (Mathf.Abs(triggerFloatR - triggerFloat) > 0.01)
             {
                 if (triggerFloat < triggerFloatR)
                 {
-                    triggerFloat += speed;
+                    triggerFloat += speed *(triggerFloatR-triggerFloat);
                 }
                 else if (triggerFloat > triggerFloatR)
                 {
-                    triggerFloat -= speed;
+                    triggerFloat -= speed*(triggerFloat - triggerFloatR);
                 }
             }
         }

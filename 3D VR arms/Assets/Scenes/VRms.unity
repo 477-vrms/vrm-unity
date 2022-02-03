@@ -19161,6 +19161,7 @@ MonoBehaviour:
   triggerFloatR: 0
   triggerFloat: 0
   instant: 0
+  oculus: 1
 --- !u!4 &756212361
 Transform:
   m_ObjectHideFlags: 0
@@ -50055,6 +50056,7 @@ MonoBehaviour:
   Joint6: {fileID: 29692922}
   Joint7: {fileID: 137820520}
   Gripper: {fileID: 756212360}
+  rate: 5
 --- !u!4 &1800682985
 Transform:
   m_ObjectHideFlags: 0

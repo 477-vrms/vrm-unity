@@ -18,6 +18,9 @@ public class Connection : MonoBehaviour
     public Transform Joint6;
     public Transform Joint7;
     public TriggerGrip Gripper; //gets grip % from a custom script (Grip Percent game object)
+    public int rate = 0;
+    private int count = 0;
+    System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
     public class MyClass
     {
         public int J1;
@@ -28,6 +31,7 @@ public class Connection : MonoBehaviour
         public int J6;
         public int J7;
         public int J8;
+        public string T;
     }
 
     // Start is called before the first frame update
@@ -79,8 +83,12 @@ public class Connection : MonoBehaviour
             #if !UNITY_WEBGL || UNITY_EDITOR
             websocket.DispatchMessageQueue();
             #endif
-            if (websocket.State == WebSocketState.Open)
+        double time = (System.DateTime.UtcNow - epochStart).TotalSeconds;
+        //Debug.Log(time);
+        //Debug.Log((int)(time*10 % 10));
+        if (websocket.State == WebSocketState.Open && (int)(time*1000 % 10) == 0)
             {
+                
                 MyClass myObject = new MyClass();
                 myObject.J1 = Account(Joint1.transform.localEulerAngles, "y");
                 myObject.J2 = Account(Joint2.transform.localEulerAngles, "x");
@@ -90,17 +98,22 @@ public class Connection : MonoBehaviour
                 myObject.J6 = Account(Joint6.transform.localEulerAngles, "y");
                 myObject.J7 = Account(Joint7.transform.localEulerAngles, "z");
                 myObject.J8 = (int)Gripper.getGrip();
-                
-                //string json = ;
-                await websocket.SendText(JsonUtility.ToJson(myObject));
-                Debug.Log(JsonUtility.ToJson(myObject));
+
+            
+            //double cur_time = (time);
+            myObject.T = (time.ToString("F2"));
+
+            //string json = ;
+            await websocket.SendText(JsonUtility.ToJson(myObject));
+                //Debug.Log(JsonUtility.ToJson(myObject));
                 
             }
             else
             {
-                Debug.Log("Connection closed.");
+                //Debug.Log("Connection closed.");
             }
-        
+        //count++; //for slowing down update speed
+
     }
 
     private async void OnApplicationQuit()
