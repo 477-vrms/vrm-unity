@@ -31,6 +31,7 @@ public class RemoteControl : MonoBehaviour
 
         if (OVRInput.Get(OVRInput.Button.Two)) //B button
         {
+            gameObject.GetComponent<MeshRenderer>().material = Controlled;
             //copierBeingGrabbed = true;
             //transform.position = (whatToCopy.transform.position - offset);
             transform.position += (whatToCopy.transform.position- OldCopierPosition)*multiplier;
@@ -48,7 +49,7 @@ public class RemoteControl : MonoBehaviour
         else if(OVRInput.Get(OVRInput.Button.Two) == false)
         {
             //copierBeingGrabbed = false;
-
+            gameObject.GetComponent<MeshRenderer>().material = normal;
             Start();
         }
         

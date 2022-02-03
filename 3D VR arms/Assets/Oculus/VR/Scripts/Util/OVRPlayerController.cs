@@ -148,7 +148,7 @@ public class OVRPlayerController : MonoBehaviour
 	private float FallSpeed = 0.0f;
 	private OVRPose? InitialPose;
 	public float InitialYRotation { get; private set; }
-	public float MoveScaleMultiplier = 3.0f;
+	public float MoveScaleMultiplier = 1.0f;
 	private float RotationScaleMultiplier = 1.0f;
 	private bool SkipMouseRotation = true; // It is rare to want to use mouse movement in VR, so ignore the mouse by default.
 	private bool HaltUpdateMovement = false;
@@ -223,12 +223,17 @@ public class OVRPlayerController : MonoBehaviour
 			else
 				return;
 		}
+
+		//todo: enable for Unity Input System
+#if ENABLE_LEGACY_INPUT_MANAGER
+
 		//Use keys to ratchet rotation
 		if (Input.GetKeyDown(KeyCode.Q))
 			buttonRotation -= RotationRatchet;
 
 		if (Input.GetKeyDown(KeyCode.E))
 			buttonRotation += RotationRatchet;
+#endif
 	}
 
 	protected virtual void UpdateController()
@@ -322,6 +327,8 @@ public class OVRPlayerController : MonoBehaviour
 
 	public virtual void UpdateMovement()
 	{
+		//todo: enable for Unity Input System
+#if ENABLE_LEGACY_INPUT_MANAGER
 		if (HaltUpdateMovement)
 			return;
 
@@ -489,6 +496,7 @@ public class OVRPlayerController : MonoBehaviour
 				transform.RotateAround(CameraRig.centerEyeAnchor.position, Vector3.up, euler.y);
 			}
 		}
+#endif
 	}
 
 

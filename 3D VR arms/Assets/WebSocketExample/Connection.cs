@@ -20,14 +20,14 @@ public class Connection : MonoBehaviour
     public TriggerGrip Gripper; //gets grip % from a custom script (Grip Percent game object)
     public class MyClass
     {
-        public float Joint1;
-        public float Joint2;
-        public float Joint3;
-        public float Joint4;
-        public float Joint5;
-        public float Joint6;
-        public float Joint7;
-        public float Joint8;
+        public int J1;
+        public int J2;
+        public int J3;
+        public int J4;
+        public int J5;
+        public int J6;
+        public int J7;
+        public int J8;
     }
 
     // Start is called before the first frame update
@@ -82,17 +82,18 @@ public class Connection : MonoBehaviour
             if (websocket.State == WebSocketState.Open)
             {
                 MyClass myObject = new MyClass();
-                myObject.Joint1 = Account(Joint1.transform.localEulerAngles, "y");
-                myObject.Joint2 = Account(Joint2.transform.localEulerAngles, "x");
-                myObject.Joint3 = Account(Joint3.transform.localEulerAngles, "x");
-                myObject.Joint4 = Account(Joint4.transform.localEulerAngles, "y");
-                myObject.Joint5 = Account(Joint5.transform.localEulerAngles, "y");
-                myObject.Joint6 = Account(Joint6.transform.localEulerAngles, "y");
-                myObject.Joint7 = Account(Joint7.transform.localEulerAngles, "z");
-                myObject.Joint8 = Gripper.getGrip();
-
+                myObject.J1 = Account(Joint1.transform.localEulerAngles, "y");
+                myObject.J2 = Account(Joint2.transform.localEulerAngles, "x");
+                myObject.J3 = Account(Joint3.transform.localEulerAngles, "x");
+                myObject.J4 = Account(Joint4.transform.localEulerAngles, "y");
+                myObject.J5 = Account(Joint5.transform.localEulerAngles, "y");
+                myObject.J6 = Account(Joint6.transform.localEulerAngles, "y");
+                myObject.J7 = Account(Joint7.transform.localEulerAngles, "z");
+                myObject.J8 = (int)Gripper.getGrip();
+                
                 //string json = ;
                 await websocket.SendText(JsonUtility.ToJson(myObject));
+                Debug.Log(JsonUtility.ToJson(myObject));
                 
             }
             else
@@ -106,7 +107,7 @@ public class Connection : MonoBehaviour
     {
         await websocket.Close();
     }
-    public float Account(Vector3 angle, string axis)
+    public int Account(Vector3 angle, string axis)
     {
         float newAngle = 0;
 
@@ -159,6 +160,6 @@ public class Connection : MonoBehaviour
 
         }
 
-        return newAngle;
+        return (int)newAngle;
     }
 }

@@ -14,6 +14,10 @@ public class AllowClawToGrab2 : MonoBehaviour
     private GameObject oldParent;
     private Vector3 lastPosition = new Vector3(0, 0, 0);
     private Vector3 velocity = new Vector3(0, 0, 0);
+    private Vector3 rotation = new Vector3(0, 0, 0);
+    private Vector3 lastRotation = new Vector3(0, 0, 0);
+    public float rotationMultiplier = 0;
+    public float velocityMultiplier = 0;
 
     Vector3 m_DetachVelocity;
     Vector3 m_DetachAngularVelocity;
@@ -58,7 +62,9 @@ public class AllowClawToGrab2 : MonoBehaviour
             rb.isKinematic = false;
             state = "not grabbed";
             gameObject.transform.parent = oldParent.transform;
-            rb.velocity = velocity;
+            rb.velocity = velocity*velocityMultiplier;
+            rb.angularVelocity = rotation*rotationMultiplier;
+            //Debug.Log(rotation);
             claw.isGrabbed = false;
 
         }
@@ -67,8 +73,10 @@ public class AllowClawToGrab2 : MonoBehaviour
             transform.position += new Vector3(0f, 0f, 0f);
 
             velocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
+            rotation = (transform.eulerAngles - lastRotation) / Time.fixedDeltaTime;
 
             lastPosition = transform.position;
+            lastRotation = transform.eulerAngles;
         }
 
 
