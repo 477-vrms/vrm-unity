@@ -102,7 +102,7 @@ public class Connection : MonoBehaviour
             
             //double cur_time = (time);
             myObject.T = (time.ToString("F2"));
-
+            //Debug.Log(myObject.T);
             //string json = ;
             await websocket.SendText(JsonUtility.ToJson(myObject));
                 //Debug.Log(JsonUtility.ToJson(myObject));
