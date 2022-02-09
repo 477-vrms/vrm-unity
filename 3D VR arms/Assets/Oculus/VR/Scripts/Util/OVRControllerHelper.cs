@@ -69,7 +69,7 @@ public class OVRControllerHelper : MonoBehaviour
 		Quest2 = 3,
 	}
 
-	private ControllerType activeControllerType = ControllerType.Rift;
+	private ControllerType activeControllerType = ControllerType.Quest2;
 
 	private bool m_prevControllerConnected = false;
 	private bool m_prevControllerConnectedCached = false;
@@ -89,7 +89,7 @@ public class OVRControllerHelper : MonoBehaviour
 				activeControllerType = ControllerType.QuestAndRiftS;
 				break;
 		}
-
+		activeControllerType = ControllerType.Quest2;
 		Debug.LogFormat("OVRControllerHelp: Active controller type: {0} for product {1}", activeControllerType, OVRPlugin.productName);
 
 		// Hide all controller models until controller get connected

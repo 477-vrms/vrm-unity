@@ -28,6 +28,7 @@ public class Reset : MonoBehaviour
                 transform.position = StartingPosition;
                 transform.rotation = StartingRotation;
                 rb.velocity = new Vector3(0,0,0);
+                rb.angularVelocity = new Vector3(0, 0, 0);
                 isHeld = true;
             }
         }

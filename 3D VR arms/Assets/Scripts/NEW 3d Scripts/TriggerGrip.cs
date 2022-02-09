@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class TriggerGrip : MonoBehaviour
 {
-    [ReadOnly]
     public float GripPercent;
     public float maxGrip = 100;
     public float speed;
