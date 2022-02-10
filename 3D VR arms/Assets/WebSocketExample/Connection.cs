@@ -86,7 +86,7 @@ public class Connection : MonoBehaviour
         double time = (System.DateTime.UtcNow - epochStart).TotalSeconds;
         //Debug.Log(time);
         //Debug.Log((int)(time*10 % 10));
-        if (websocket.State == WebSocketState.Open && (int)(time*1000 % 10) == 0)
+        if (websocket.State == WebSocketState.Open)// && (int)(time*1000 % 10) == 0)
             {
                 
                 MyClass myObject = new MyClass();
@@ -99,7 +99,7 @@ public class Connection : MonoBehaviour
                 myObject.J7 = Account(Joint7.transform.localEulerAngles, "z");
                 myObject.J8 = (int)Gripper.getGrip();
 
-            
+
             //double cur_time = (time);
             myObject.T = (time.ToString("F2"));
             //Debug.Log(myObject.T);
