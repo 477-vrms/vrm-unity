@@ -17,11 +17,18 @@ public class RemoteControl : MonoBehaviour
     private Vector3 OldCopierPosition;
     // Start is called before the first frame update
 
+    //reset stuff
+    public Vector3 StartingPosition;
+    public Quaternion StartingRotation;
+
+
     void Start()
     {
         offset = whatToCopy.transform.position - transform.position;
         offsetR = whatToCopy.transform.rotation.eulerAngles - transform.rotation.eulerAngles ;
         OldCopierPosition = whatToCopy.transform.position;
+        StartingPosition = transform.position;
+        StartingRotation = transform.rotation;
 
     }
 
@@ -50,7 +57,9 @@ public class RemoteControl : MonoBehaviour
         {
             //copierBeingGrabbed = false;
             gameObject.GetComponent<MeshRenderer>().material = normal;
-            Start();
+            offset = whatToCopy.transform.position - transform.position;
+            offsetR = whatToCopy.transform.rotation.eulerAngles - transform.rotation.eulerAngles;
+            OldCopierPosition = whatToCopy.transform.position;
         }
         
     }
@@ -61,5 +70,17 @@ public class RemoteControl : MonoBehaviour
     public void changeRotOffset()
     {
         RotationOffset = !RotationOffset;
+    }
+    public void resetTarget()
+    {
+        if (GetComponent<Animator>().enabled)
+        {
+            //do nothing during animation
+        }
+        else
+        {
+            transform.position = StartingPosition;
+            transform.rotation = StartingRotation;
+        }
     }
 }
