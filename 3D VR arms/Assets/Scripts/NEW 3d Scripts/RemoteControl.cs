@@ -54,4 +54,12 @@ public class RemoteControl : MonoBehaviour
         }
         
     }
+    public void changeMultiplier(float newValue)
+    {
+        multiplier = newValue;
+    }
+    public void changeRotOffset()
+    {
+        RotationOffset = !RotationOffset;
+    }
 }

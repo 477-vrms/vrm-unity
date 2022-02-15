@@ -109,5 +109,9 @@ public class TriggerGrip : MonoBehaviour
     {
         maxGrip = 100;
     }
+    public void toggleInstant()
+    {
+        instant = !instant;
+    }
 }
 
