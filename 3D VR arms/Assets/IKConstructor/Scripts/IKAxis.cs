@@ -72,11 +72,36 @@ public class IKAxis : IKBase
 	Quaternion          StartRotation=Quaternion.identity;
 	[HideInInspector] [SerializeField]
 	bool                IsInit=false;
-	
-	
-	
+
+	private float OldMax = 999;
+	private float OldMin;
+	public void changeMaximum(float newValue)
+	{
+		Maximum = newValue;
+	}
+	public void changeMinimum(float newValue)
+	{
+		Minimum = newValue;
+	}
+	public void resetLimits()
+	{
+		Minimum = OldMin;
+		Maximum = OldMax;
+	}
+	public void toggleLimits()
+	{
+		Limits = !Limits;
+	}
+	public void lockToCurrent()
+	{
+		changeMaximum(CurrentAngle);
+		changeMinimum(CurrentAngle); 
+	}
+
 	void Start()
 	{
+		
+		
 		if (!Application.isPlaying)
 			return;
 		
@@ -88,6 +113,13 @@ public class IKAxis : IKBase
 
 	void LateUpdate()
 	{
+		if (OldMax == 999)
+		{
+			OldMax = Maximum;
+			OldMin = Minimum;
+			//Debug.Log(OldMax);
+			//Debug.Log(OldMin);
+		}
 		// Updates Axis automatically is set
 		if (AutoUpdate)
 			ManualUpdate();

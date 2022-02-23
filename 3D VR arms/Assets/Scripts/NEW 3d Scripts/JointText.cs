@@ -23,14 +23,14 @@ public class JointText : MonoBehaviour
         //Way to get inspector rotation (doesnt work on builds)
         //UnityEditor.TransformUtils.GetInspectorRotation(Joint1.transform)
 
-        textDisplay.text = "JOINT 1, Y: " + Account(Joint1.transform.localEulerAngles, "y").ToString("F2");
-        textDisplay.text += "\nJOINT 2, X: " + Account(Joint2.transform.localEulerAngles, "x").ToString("F2");
-        textDisplay.text += "\nJOINT 3, X: " + Account(Joint3.transform.localEulerAngles, "x").ToString("F2");
-        textDisplay.text += "\nJOINT 4, Y: " + Account(Joint4.transform.localEulerAngles, "y").ToString("F2");
-        textDisplay.text += "\nJOINT 5, Y: " + Account(Joint5.transform.localEulerAngles, "y").ToString("F2");
-        textDisplay.text += "\nJOINT 6, Y: " + Account(Joint6.transform.localEulerAngles, "y").ToString("F2");
-        textDisplay.text += "\nJOINT 7, Z: " + Account(Joint7.transform.localEulerAngles, "z").ToString("F2");
-        textDisplay.text += "\nJoint 8, C: " + Gripper.getGrip() + "%";
+        textDisplay.text = "Joint 1, Y: " + Account(Joint1.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJoint 2, X: " + Account(Joint2.transform.localEulerAngles, "x").ToString("F2");
+        textDisplay.text += "\nJoint 3, X: " + Account(Joint3.transform.localEulerAngles, "x").ToString("F2");
+        //textDisplay.text += "\nJoint 4 (not used)";// + Account(Joint4.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJoint 4, Y: " + Account(Joint5.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJoint 5, Y: " + Account(Joint6.transform.localEulerAngles, "y").ToString("F2");
+        textDisplay.text += "\nJoint 6, Z: " + Account(Joint7.transform.localEulerAngles, "z").ToString("F2");
+        textDisplay.text += "\nJoint 7, Claw: " + Gripper.getGrip() + "%";
     }
 
     public float Account(Vector3 angle, string axis)

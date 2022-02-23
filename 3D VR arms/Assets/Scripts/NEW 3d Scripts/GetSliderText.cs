@@ -14,7 +14,7 @@ public class GetSliderText : MonoBehaviour
 
     public void OnSliderValueChanged(float value)
     {
-        ValueText.text = value.ToString("0.00");
+        ValueText.text = value.ToString("0");
     }
 }
 
