@@ -10,6 +10,13 @@ public class Connection : MonoBehaviour
     
     WebSocket websocket;
     //int count;
+    public int offset1 = 0;
+    public int offset2 = 0;
+    public int offset3 = 0;
+    public int offset4 = 0;
+    public int offset5 = 0;
+    public int offset6 = 0;
+    public int offset7 = 0;
     public Transform Joint1;
     public Transform Joint2;
     public Transform Joint3;
@@ -90,13 +97,13 @@ public class Connection : MonoBehaviour
             {
                 
                 MyClass myObject = new MyClass();
-                myObject.J1 = Account(Joint1.transform.localEulerAngles, "y");
-                myObject.J2 = Account(Joint2.transform.localEulerAngles, "x");
-                myObject.J3 = Account(Joint3.transform.localEulerAngles, "x");
-                myObject.J4 = Account(Joint4.transform.localEulerAngles, "y");
-                myObject.J5 = Account(Joint5.transform.localEulerAngles, "y");
-                myObject.J6 = Account(Joint6.transform.localEulerAngles, "y");
-                myObject.J7 = Account(Joint7.transform.localEulerAngles, "z");
+                myObject.J1 = Account(Joint1.transform.localEulerAngles, "y") + 180 + offset1;
+                myObject.J2 = Account(Joint2.transform.localEulerAngles, "x") + 180 + offset2;
+                myObject.J3 = Account(Joint3.transform.localEulerAngles, "x") + offset3;
+                myObject.J4 = Account(Joint4.transform.localEulerAngles, "y") + offset4;
+                myObject.J5 = Account(Joint5.transform.localEulerAngles, "y") + 180 + offset5;
+                myObject.J6 = Account(Joint6.transform.localEulerAngles, "y") + 180 + offset6;
+                myObject.J7 = Account(Joint7.transform.localEulerAngles, "z") + 180 + offset7;
                 myObject.J8 = (int)Gripper.getGrip();
 
 

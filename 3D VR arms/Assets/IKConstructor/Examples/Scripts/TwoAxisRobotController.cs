@@ -88,7 +88,7 @@ public class TwoAxisRobotController : MonoBehaviour
 		Finger1.TargetPosition=Fingers;
 		
 		// Custom action. Calculates length of the first bone of a robot arm.
-		RobotArm.OriginLength=CalculateArmBone1Length();
+		//RobotArm.OriginLength=CalculateArmBone1Length();
 		
 		// Updating IK-chain
 		UpdatePseudoTargets();

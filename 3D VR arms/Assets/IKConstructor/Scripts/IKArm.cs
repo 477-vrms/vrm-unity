@@ -65,9 +65,57 @@ public class IKArm : IKBase
 	Quaternion              StartRotation=Quaternion.identity;
 	[HideInInspector] [SerializeField]
 	bool                    IsInit=false;
-	
-	
-	
+
+	private float OldMaxO = 999;
+	private float OldMinO;
+	public void changeMaximumO(float newValue)
+	{
+		MaximumO = newValue;
+	}
+	public void changeMinimumO(float newValue)
+	{
+		MinimumO = newValue;
+	}
+	public void resetLimitsO()
+	{
+		MinimumO = OldMinO;
+		MaximumO = OldMaxO;
+	}
+	public void toggleLimitsO()
+	{
+		LimitsOrigin = !LimitsOrigin;
+	}
+	public void lockToCurrentO()
+	{
+		changeMaximumO(TargetOriginAngle);
+		changeMinimumO(TargetOriginAngle);
+	}
+	private float OldMaxE = 999;
+	private float OldMinE;
+	public void changeMaximumE(float newValue)
+	{
+		MaximumE = newValue;
+	}
+	public void changeMinimumE(float newValue)
+	{
+		MinimumE = newValue;
+	}
+	public void resetLimitsE()
+	{
+		MinimumE = OldMinE;
+		MaximumE = OldMaxE;
+	}
+	public void toggleLimitsE()
+	{
+		LimitsElbow = !LimitsElbow;
+	}
+	public void lockToCurrentE()
+	{
+		changeMaximumE(TargetElbowAngle);
+		changeMinimumE(TargetElbowAngle);
+	}
+
+
 	void Start()
 	{
 		if (!Application.isPlaying)
@@ -81,6 +129,15 @@ public class IKArm : IKBase
 	
 	void LateUpdate()
 	{
+		if (OldMaxO == 999)
+		{
+			OldMaxO = MaximumO;
+			OldMinO = MinimumO;
+			OldMaxE = MaximumE;
+			OldMinE = MinimumE;
+			//Debug.Log(OldMax);
+			//Debug.Log(OldMin);
+		}
 		// Updates object automatically if set
 		if (AutoUpdate)
 			ManualUpdate();
@@ -262,7 +319,7 @@ public class IKArm : IKBase
 		QBase=Quaternion.AngleAxis(-BaseAngle,Vector3.right);
 		QElbow=Quaternion.AngleAxis(-ElbowAngle,Vector3.right);
 		
-		Elbow.localPosition=Vector3.forward*OriginLength;
+		//Elbow.localPosition=Vector3.forward*OriginLength; EDITED
 		Endpoint.localPosition=Vector3.forward*ElbowLength;
 		
 		Origin.localRotation=StartRotation*QBase;

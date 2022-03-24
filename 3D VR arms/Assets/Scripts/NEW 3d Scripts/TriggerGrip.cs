@@ -17,27 +17,30 @@ public class TriggerGrip : MonoBehaviour
     public float triggerFloat = 0;
     public bool instant;
     public bool oculus;
+    public float value = 0;
 
     void Update()
     {
         if(oculus == false)
         {
-            var inputDevices = new List<UnityEngine.XR.InputDevice>();
-            UnityEngine.XR.InputDevices.GetDevices(inputDevices);
-            foreach (var device in inputDevices)
-            {
-                //if (device.characteristics.ToString().Contains("Controller, Left"))
-                //{
-                //    device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatL);
-                //}
-                if (device.characteristics.ToString().Contains("Controller, Right"))
-                {
-                    device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatR);
-                }
-            }
+            triggerFloatR = value;
+            //var inputDevices = new List<UnityEngine.XR.InputDevice>();
+            //UnityEngine.XR.InputDevices.GetDevices(inputDevices);
+            //foreach (var device in inputDevices)
+            //{
+            //    //if (device.characteristics.ToString().Contains("Controller, Left"))
+            //    //{
+            //    //    device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatL);
+            //    //}
+            //    if (device.characteristics.ToString().Contains("Controller, Right"))
+            //    {
+            //        device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out triggerFloatR);
+            //    }
+            //}
         }
         else
         {
+            //triggerFloatR = value;
             triggerFloatR = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
         }
         

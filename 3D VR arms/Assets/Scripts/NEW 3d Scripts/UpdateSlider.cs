@@ -8,15 +8,45 @@ public class UpdateSlider : MonoBehaviour
     // Start is called before the first frame update
     public GameObject joint;
     public bool isMax;
+    public bool isIKArm;
+    public bool isElbow;
     void Start()
     {
-        if (isMax == true)
+        if(isIKArm == true)
         {
-            UpdateMax();
+            if(isElbow == true)
+            {
+                if (isMax == true)
+                {
+                    UpdateMaxE();
+                }
+                else
+                {
+                    UpdateMinE();
+                }
+            }
+            else
+            {
+                if (isMax == true)
+                {
+                    UpdateMaxO();
+                }
+                else
+                {
+                    UpdateMinO();
+                }
+            }
         }
         else
         {
-            UpdateMin();
+            if (isMax == true)
+            {
+                UpdateMax();
+            }
+            else
+            {
+                UpdateMin();
+            }
         }
         
     }
@@ -34,6 +64,22 @@ public class UpdateSlider : MonoBehaviour
     public void UpdateMin()
     {
         GetComponent<Slider>().value = joint.GetComponent<IKAxis>().Minimum;
+    }
+    public void UpdateMaxO()
+    {
+        GetComponent<Slider>().value = joint.GetComponent<IKArm>().MaximumO;
+    }
+    public void UpdateMinO()
+    {
+        GetComponent<Slider>().value = joint.GetComponent<IKArm>().MinimumO;
+    }
+    public void UpdateMaxE()
+    {
+        GetComponent<Slider>().value = joint.GetComponent<IKArm>().MaximumE;
+    }
+    public void UpdateMinE()
+    {
+        GetComponent<Slider>().value = joint.GetComponent<IKArm>().MinimumE;
     }
     public void UpdateSliderValue()
     {
