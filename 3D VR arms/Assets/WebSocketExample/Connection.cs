@@ -39,6 +39,7 @@ public class Connection : MonoBehaviour
         public int J7;
         public int J8;
         public string T;
+        public string action;
     }
 
     // Start is called before the first frame update
@@ -109,6 +110,7 @@ public class Connection : MonoBehaviour
 
             //double cur_time = (time);
             myObject.T = (time.ToString("F2"));
+            myObject.action = ("move");
             //Debug.Log(myObject.T);
             //string json = ;
             await websocket.SendText(JsonUtility.ToJson(myObject));
