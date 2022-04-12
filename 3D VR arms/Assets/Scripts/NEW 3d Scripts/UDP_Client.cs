@@ -54,14 +54,15 @@ using System.Collections;
 using System.Text;
 using UnityEngine;
 //using Unity.Collections.NativeArray;
+using System.IO;
 using UnityEngine.UI;
 
 public class UDP_Client : MonoBehaviour
 {
     public RawImage YourRawImage;
-    private byte[] bytes = null;
+    public RawImage HandImage;
     bool excep = false;
-    private Texture2D tex = new Texture2D(16, 16);
+    //private Texture2D tex = new Texture2D(640, 480, TextureFormat.PVRTC_RGBA4, false);
     public Texture2D test;
     void Start()
     {
@@ -71,6 +72,7 @@ public class UDP_Client : MonoBehaviour
     IEnumerator waiter(UdpClient client)
     {
 
+        Texture2D tex = new Texture2D(320, 240);
         client.Connect("34.132.95.250", 2002);
         byte[] sendBytes = Encoding.ASCII.GetBytes("{\"id\": \"vrms_unity\"}");
         client.Send(sendBytes, sendBytes.Length);
@@ -79,20 +81,25 @@ public class UDP_Client : MonoBehaviour
             try
             {
 
-
+                
                 client.Client.ReceiveTimeout = 1000;
                 IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 5500);
                 byte[] receiveBytes = client.Receive(ref remoteEndPoint);
                 //string receivedString = Encoding.ASCII.GetByteCount(receiveBytes);
-                print("Message received from the server \n " + receiveBytes.Length);
+                //print("Message received from the server \n " + receiveBytes.Length);
                 //tex = receiveBytes.texture;
                 //bytes = receiveBytes.EncodeToPNG();
                 //var texturee = new Texture2D(2, 2);
-                print("load");
-                Console.WriteLine(Encoding.Default.GetString(receiveBytes));
+                //print("load");
+                //File.WriteAllBytes("Assets/temp2.txt", receiveBytes);
+                //Debug.Log(System.Text.Encoding.ASCII.GetString(receiveBytes));
+                //tex = receiveBytes.texture;
+                //receiveBytes = tex.EncodeToPNG();
                 tex.LoadImage(receiveBytes);
-                print("set tex");
-                //YourRawImage.texture = tex;
+                tex.Apply();
+                //print("set tex");
+                YourRawImage.texture = tex;
+                HandImage.texture = tex;
 
             }
 
@@ -101,16 +108,17 @@ public class UDP_Client : MonoBehaviour
                 print("Exception thrown " + e.Message);
                 excep = true;
             }
-            //Wait for 15 seconds
+            //Wait for 5 seconds
             if(excep == true)
             {
-                
-                yield return new WaitForSeconds(5);
                 excep = false;
+                yield return new WaitForSeconds(15);
+                
+                client.Send(sendBytes, sendBytes.Length);
             }
             else
             {
-                yield return new WaitForSeconds(0.03F);
+                yield return new WaitForSeconds(0.03F); //0.03 = 30 frames?
             }
             //TextAsset bindata = test;
             //var test2 = test.GetRawTextureData();

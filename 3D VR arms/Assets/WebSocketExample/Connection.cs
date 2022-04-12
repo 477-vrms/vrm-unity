@@ -26,7 +26,6 @@ public class Connection : MonoBehaviour
     public Transform Joint7;
     public TriggerGrip Gripper; //gets grip % from a custom script (Grip Percent game object)
     public int rate = 0;
-    private int count = 0;
     System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
     public class MyClass
     {
