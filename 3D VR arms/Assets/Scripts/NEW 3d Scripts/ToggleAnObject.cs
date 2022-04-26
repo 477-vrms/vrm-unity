@@ -19,8 +19,12 @@ public class ToggleAnObject : MonoBehaviour
         {
             if (isHeld == false)
             {
-                Item1.SetActive(!Item1.activeSelf);
-                Item2.SetActive(!Item1.activeSelf);
+                if (Item1.layer == 5) { SetLayerRecursively(Item1, 3); }
+                else { SetLayerRecursively(Item1, 5); }
+                if (Item2.layer == 5) { SetLayerRecursively(Item2, 3); }
+                else { SetLayerRecursively(Item2, 5); }
+                //Item1.SetActive(!Item1.activeSelf);
+                //Item2.SetActive(!Item1.activeSelf);
                 isHeld = true;
             }
         }
@@ -31,4 +35,23 @@ public class ToggleAnObject : MonoBehaviour
 
 
     }
+    void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        if (null == obj)
+        {
+            return;
+        }
+
+        obj.layer = newLayer;
+
+        foreach (Transform child in obj.transform)
+        {
+            if (null == child)
+            {
+                continue;
+            }
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
+    }
+
 }

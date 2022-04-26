@@ -11,12 +11,25 @@ public class Connection : MonoBehaviour
     WebSocket websocket;
     //int count;
     public int offset1 = 0;
+    public bool flip1;
+    
     public int offset2 = 0;
+    public bool flip2;
+    
     public int offset3 = 0;
+    public bool flip3;
+   
     public int offset4 = 0;
+    public bool flip4;
+    
     public int offset5 = 0;
+    public bool flip5;
+    
     public int offset6 = 0;
+    public bool flip6;
+    
     public int offset7 = 0;
+    public bool flip7;
     public Transform Joint1;
     public Transform Joint2;
     public Transform Joint3;
@@ -50,7 +63,7 @@ public class Connection : MonoBehaviour
         headers.Add("Authorization", "Bearer SENIORDESIGNMADEMEDOTHIS");
         headers.Add("Content-Type", "application/json");
         websocket = new WebSocket("wss://ecess-api.matthewwen.com/vrms/joints/person", headers);
-
+        StartCoroutine(waiter());
         websocket.OnOpen += () =>
         {
             Debug.Log("Connection open!");
@@ -82,46 +95,56 @@ public class Connection : MonoBehaviour
         {
             Debug.Log("Connection: " + websocket.State);
         }
+        
 
     }
 
-    async void Update()
+    IEnumerator waiter()
     {
-            #if !UNITY_WEBGL || UNITY_EDITOR
+        while(true)
+        {
+            //Debug.Log("ello");
+
+#if !UNITY_WEBGL || UNITY_EDITOR
             websocket.DispatchMessageQueue();
-            #endif
-        double time = (System.DateTime.UtcNow - epochStart).TotalSeconds;
-        //Debug.Log(time);
-        //Debug.Log((int)(time*10 % 10));
-        if (websocket.State == WebSocketState.Open)// && (int)(time*1000 % 10) == 0)
+#endif
+            double time = (System.DateTime.UtcNow - epochStart).TotalSeconds;
+            //Debug.Log(time);
+            //Debug.Log((int)(time*10 % 10));
+            if (websocket.State == WebSocketState.Open)// && (int)(time*1000 % 10) == 0)
             {
-                
+
                 MyClass myObject = new MyClass();
-                myObject.J1 = Account(Joint1.transform.localEulerAngles, "y") + 180 + offset1;
-                myObject.J2 = Account(Joint2.transform.localEulerAngles, "x") + 180 + offset2;
-                myObject.J3 = Account(Joint3.transform.localEulerAngles, "x") + offset3;
-                myObject.J4 = Account(Joint4.transform.localEulerAngles, "y") + offset4;
-                myObject.J5 = Account(Joint5.transform.localEulerAngles, "y") + 180 + offset5;
-                myObject.J6 = Account(Joint6.transform.localEulerAngles, "y") + 180 + offset6;
-                myObject.J7 = Account(Joint7.transform.localEulerAngles, "z") + 180 + offset7;
+                myObject.J1 = (1 - 2 * Convert.ToInt32(flip1)) * Account(Joint1.transform.localEulerAngles, "y") + 180 + offset1;
+                myObject.J2 = (1 - 2 * Convert.ToInt32(flip2)) * Account(Joint2.transform.localEulerAngles, "x") + 180 + offset2;
+                myObject.J3 = (1 - 2 * Convert.ToInt32(flip3)) * Account(Joint3.transform.localEulerAngles, "x") + offset3;
+                myObject.J4 = (1 - 2 * Convert.ToInt32(flip4)) * Account(Joint4.transform.localEulerAngles, "y") + offset4;
+                myObject.J5 = (1 - 2 * Convert.ToInt32(flip5)) * Account(Joint5.transform.localEulerAngles, "y") + 180 + offset5;
+                myObject.J6 = (1 - 2 * Convert.ToInt32(flip6)) * Account(Joint6.transform.localEulerAngles, "y") + 180 + offset6;
+                myObject.J7 = (1 - 2 * Convert.ToInt32(flip7)) * Account(Joint7.transform.localEulerAngles, "z") + 180 + offset7;
                 myObject.J8 = (int)Gripper.getGrip();
 
 
-            //double cur_time = (time);
-            myObject.T = (time.ToString("F2"));
-            myObject.action = ("move");
-            //Debug.Log(myObject.T);
-            //string json = ;
-            await websocket.SendText(JsonUtility.ToJson(myObject));
+                //double cur_time = (time);
+                myObject.T = (time.ToString("F2"));
+                myObject.action = ("move");
+                //Debug.Log(myObject.T);
+                //string json = ;
+                //print("hello");
+                websocket.SendText(JsonUtility.ToJson(myObject));
                 //Debug.Log(JsonUtility.ToJson(myObject));
-                
+
             }
             else
             {
                 //Debug.Log("Connection closed.");
             }
-        //count++; //for slowing down update speed
+            //count++; //for slowing down update speed
 
+            yield return new WaitForSeconds(0.1F);
+            
+            
+        }
     }
 
     private async void OnApplicationQuit()
@@ -183,4 +206,6 @@ public class Connection : MonoBehaviour
 
         return (int)newAngle;
     }
+
 }
+
