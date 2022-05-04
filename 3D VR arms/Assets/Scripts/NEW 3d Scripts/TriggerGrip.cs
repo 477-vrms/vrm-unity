@@ -11,6 +11,7 @@ public class TriggerGrip : MonoBehaviour
 {
     public float GripPercent;
     public float maxGrip = 100;
+    public float minGrip = 10;
     public float speed;
     public float triggerFloatL = 0;
     public float triggerFloatR = 0;
@@ -18,10 +19,31 @@ public class TriggerGrip : MonoBehaviour
     public bool instant;
     public bool oculus;
     public float value = 0;
+    public bool animate;
+    private bool goUp;
 
     void Update()
     {
-        if(oculus == false)
+        if (animate == true)
+        {
+            if (goUp == true)
+            {
+                triggerFloatR += 0.005F;
+                if(triggerFloatR >= 1)
+                {
+                    goUp = false;
+                }
+            }
+            else
+            {
+                triggerFloatR -= 0.005F;
+                if (triggerFloatR <= 0)
+                {
+                    goUp = true;
+                }
+            }
+        }
+        else if(oculus == false)
         {
             triggerFloatR = value;
             //var inputDevices = new List<UnityEngine.XR.InputDevice>();
@@ -95,7 +117,7 @@ public class TriggerGrip : MonoBehaviour
 
     public float getGrip()
     {
-        return Mathf.Min(GripPercent, maxGrip);
+        return Mathf.Max(Mathf.Min(GripPercent, maxGrip),minGrip);
     }
     public float getMaxGrip()
     {

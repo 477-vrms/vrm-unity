@@ -285,15 +285,17 @@ public class IKArm : IKBase
 		BaseAngle=SinCosToAngle(SinA,CosA);
 		if (BaseAngle>180)		BaseAngle-=360;
 		if (BaseAngle<-180)		BaseAngle+=360;
-		
+		if (LimitsOrigin == true) { BaseAngle = Mathf.Max(Mathf.Min(BaseAngle, MaximumO), MinimumO); }
+
 		// Now find direction from elbow to target and measure an angle in degrees
-		TargetTangent=(LocalTargetPos-LocalElbowPos).normalized;
+		TargetTangent =(LocalTargetPos-LocalElbowPos).normalized;
 		SinA=TargetTangent.y;
 		CosA=TargetTangent.z;
 		ElbowAngle=SinCosToAngle(SinA,CosA)-BaseAngle;
 		if (ElbowAngle>180)		ElbowAngle-=360;
 		if (ElbowAngle<-180)	ElbowAngle+=360;
-		
+		if (LimitsElbow == true) { ElbowAngle = Mathf.Max(Mathf.Min(ElbowAngle, MaximumE), MinimumE); }
+
 		return true;
 	}
 	
@@ -315,14 +317,17 @@ public class IKArm : IKBase
 	{
 		Quaternion  QBase;
 		Quaternion  QElbow;
+		//ADDED
+		
 		
 		QBase=Quaternion.AngleAxis(-BaseAngle,Vector3.right);
 		QElbow=Quaternion.AngleAxis(-ElbowAngle,Vector3.right);
 		
 		//Elbow.localPosition=Vector3.forward*OriginLength; EDITED
 		Endpoint.localPosition=Vector3.forward*ElbowLength;
-		
-		Origin.localRotation=StartRotation*QBase;
+
+		//Origin.localRotation=StartRotation*QBase;
+		Origin.localRotation = StartRotation * QBase;
 		Elbow.localRotation=QElbow;
 	}
 	

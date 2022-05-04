@@ -37,6 +37,7 @@ public class Connection : MonoBehaviour
     public Transform Joint5;
     public Transform Joint6;
     public Transform Joint7;
+    private bool enabled = true;
     public TriggerGrip Gripper; //gets grip % from a custom script (Grip Percent game object)
     public int rate = 0;
     System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
@@ -111,33 +112,42 @@ public class Connection : MonoBehaviour
             double time = (System.DateTime.UtcNow - epochStart).TotalSeconds;
             //Debug.Log(time);
             //Debug.Log((int)(time*10 % 10));
-            if (websocket.State == WebSocketState.Open)// && (int)(time*1000 % 10) == 0)
+            if (enabled == true)
             {
+                if (websocket.State == WebSocketState.Open)// && (int)(time*1000 % 10) == 0)
+                {
 
-                MyClass myObject = new MyClass();
-                myObject.J1 = (1 - 2 * Convert.ToInt32(flip1)) * Account(Joint1.transform.localEulerAngles, "y") + 180 + offset1;
-                myObject.J2 = (1 - 2 * Convert.ToInt32(flip2)) * Account(Joint2.transform.localEulerAngles, "x") + 180 + offset2;
-                myObject.J3 = (1 - 2 * Convert.ToInt32(flip3)) * Account(Joint3.transform.localEulerAngles, "x") + offset3;
-                myObject.J4 = (1 - 2 * Convert.ToInt32(flip4)) * Account(Joint4.transform.localEulerAngles, "y") + offset4;
-                myObject.J5 = (1 - 2 * Convert.ToInt32(flip5)) * Account(Joint5.transform.localEulerAngles, "y") + 180 + offset5;
-                myObject.J6 = (1 - 2 * Convert.ToInt32(flip6)) * Account(Joint6.transform.localEulerAngles, "y") + 180 + offset6;
-                myObject.J7 = (1 - 2 * Convert.ToInt32(flip7)) * Account(Joint7.transform.localEulerAngles, "z") + 180 + offset7;
-                myObject.J8 = (int)Gripper.getGrip();
+                    MyClass myObject = new MyClass();
+                    myObject.J1 = (1 - 2 * Convert.ToInt32(flip1)) * Account(Joint1.transform.localEulerAngles, "y") + 180 + offset1;
+                    myObject.J2 = (1 - 2 * Convert.ToInt32(flip2)) * Account(Joint2.transform.localEulerAngles, "x") + 180 + offset2;
+                    myObject.J3 = (1 - 2 * Convert.ToInt32(flip3)) * Account(Joint3.transform.localEulerAngles, "x") + offset3;
+                    myObject.J4 = (1 - 2 * Convert.ToInt32(flip4)) * Account(Joint4.transform.localEulerAngles, "y") + offset4;
+                    myObject.J5 = (1 - 2 * Convert.ToInt32(flip5)) * Account(Joint5.transform.localEulerAngles, "y") + 180 + offset5;
+                    myObject.J6 = (1 - 2 * Convert.ToInt32(flip6)) * Account(Joint6.transform.localEulerAngles, "y") + 180 + offset6;
+                    myObject.J7 = (1 - 2 * Convert.ToInt32(flip7)) * Account(Joint7.transform.localEulerAngles, "z") + 180 + offset7;
+                    myObject.J8 = (int)Gripper.getGrip();
 
 
-                //double cur_time = (time);
-                myObject.T = (time.ToString("F2"));
-                myObject.action = ("move");
-                //Debug.Log(myObject.T);
-                //string json = ;
-                //print("hello");
-                websocket.SendText(JsonUtility.ToJson(myObject));
-                //Debug.Log(JsonUtility.ToJson(myObject));
+                    //double cur_time = (time);
+                    myObject.T = (time.ToString("F2"));
+                    myObject.action = ("move");
+                    //Debug.Log(myObject.T);
+                    //string json = ;
+                    //print("hello");
 
+                    websocket.SendText(JsonUtility.ToJson(myObject));
+
+
+
+                    //Debug.Log(JsonUtility.ToJson(myObject));
+
+                }
             }
             else
             {
-                //Debug.Log("Connection closed.");
+                
+                    yield return new WaitForSeconds(1F); //needed?
+                
             }
             //count++; //for slowing down update speed
 
@@ -205,6 +215,10 @@ public class Connection : MonoBehaviour
         }
 
         return (int)newAngle;
+    }
+    public void disableWebsocket()
+    {
+        enabled = !enabled;
     }
 
 }
